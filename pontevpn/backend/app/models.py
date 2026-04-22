@@ -62,6 +62,7 @@ class Server(Base):
     wg_port: Mapped[int] = mapped_column(Integer, default=51820)
     wg_public_key: Mapped[str] = mapped_column(String(255), nullable=False)
     agent_url: Mapped[str] = mapped_column(String(255), nullable=False)  # URL do agente WireGuard
+    agent_secret: Mapped[str] = mapped_column(String(255), nullable=True) # Secret para autenticação
     capacity: Mapped[int] = mapped_column(Integer, default=500)
     active_peers: Mapped[int] = mapped_column(Integer, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)

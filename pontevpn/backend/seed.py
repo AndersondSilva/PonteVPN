@@ -38,6 +38,7 @@ async def seed():
                 ip="1.1.1.1", # Mock IP
                 wg_public_key="SERVER_PUBLIC_KEY_BR_MOCK",
                 agent_url="http://1.1.1.1:8080",
+                agent_secret="secret_ponte_br_2026",
                 min_plan=PlanType.free,
                 capacity=1000
             ),
@@ -49,6 +50,7 @@ async def seed():
                 ip="2.2.2.2", # Mock IP
                 wg_public_key="SERVER_PUBLIC_KEY_PT_MOCK",
                 agent_url="http://2.2.2.2:8080",
+                agent_secret="secret_ponte_pt_2026",
                 min_plan=PlanType.pro,
                 capacity=500
             ),
@@ -60,6 +62,7 @@ async def seed():
                 ip="3.3.3.3", # Mock IP
                 wg_public_key="SERVER_PUBLIC_KEY_DE_MOCK",
                 agent_url="http://3.3.3.3:8080",
+                agent_secret="secret_ponte_de_2026",
                 min_plan=PlanType.pro,
                 capacity=800
             ),
@@ -71,6 +74,7 @@ async def seed():
                 ip="4.4.4.4", # Mock IP
                 wg_public_key="SERVER_PUBLIC_KEY_US_MOCK",
                 agent_url="http://4.4.4.4:8080",
+                agent_secret="secret_ponte_us_2026",
                 min_plan=PlanType.pro,
                 capacity=1000
             )
