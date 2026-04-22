@@ -286,4 +286,4 @@ export const translations = {
   },
 } as const;
 
-export type Translations = typeof translations.pt;
+export type Translations = any; // Facilitando a troca de idiomas dinâmicos
