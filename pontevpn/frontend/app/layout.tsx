@@ -18,13 +18,17 @@ export const metadata: Metadata = {
   },
 };
 
+import ErrorBoundary from "@/components/ErrorBoundary";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt">
       <body className={`${inter.className} bg-brand-dark text-white antialiased`}>
-        <LanguageProvider>
-          {children}
-        </LanguageProvider>
+        <ErrorBoundary>
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
