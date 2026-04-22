@@ -1,10 +1,29 @@
+# Root .gitignore for PonteVPN
+# Prevent local secrets from leaking to GitHub
 
-.env*
-*.pem
-*.key
+# Local Secrets
+.env
+.env.local
+.env.*
 secrets/
 credentials/
+*.pem
+*.key
 *.json.private
+
+# Database
+backend/database.db
 *.sqlite
-logs/
+*.sqlite3
+
+# Build & System
+node_modules/
+.next/
+__pycache__/
+*.log
+.DS_Store
 .obsidian/
+dist/
+build/
+.env*
+logs/
