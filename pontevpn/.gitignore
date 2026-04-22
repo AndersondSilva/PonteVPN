@@ -1,0 +1,10 @@
+
+.env*
+*.pem
+*.key
+secrets/
+credentials/
+*.json.private
+*.sqlite
+logs/
+.obsidian/
