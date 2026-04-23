@@ -1,6 +1,6 @@
 export type Locale = "pt" | "en";
 
-export const translations = {
+export const translations: Record<Locale, any> = {
   pt: {
     nav: {
       features: "Funcionalidades",
@@ -286,4 +286,4 @@ export const translations = {
   },
 } as const;
 
-export type Translations = any; // Facilitando a troca de idiomas dinâmicos
+export type Translations = any;
