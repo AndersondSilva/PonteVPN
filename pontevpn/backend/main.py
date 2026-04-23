@@ -39,7 +39,10 @@ app.add_middleware(
     allow_origins=[
         "https://pontevpn.com",
         "https://www.pontevpn.com",
-        "http://localhost:3000",  # Dev
+        "https://ponte-vpn.vercel.app",
+        "https://ponte-vpn-kappa.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:3001",
     ],
     allow_credentials=True,
     allow_methods=["*"],
