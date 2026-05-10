@@ -1,0 +1,29 @@
+[package]
+name = "pontevpn-backend"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.7", features = ["macros"] }
+tokio = { version = "1.0", features = ["full"] }
+sqlx = { version = "0.7", features = ["runtime-tokio", "tls-rustls", "postgres", "chrono", "uuid", "macros"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+jsonwebtoken = "9.0"
+oauth2 = "4.4"
+stripe-rust = "0.33"
+argon2 = "0.5"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+dotenvy = "0.15"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["v4", "serde"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+validator = { version = "0.16", features = ["derive"] }
+reqwest = { version = "0.11", features = ["json"] }
+rand = "0.8"
+x25519-dalek = { version = "2.0", features = ["static_secrets"] }
+base64 = "0.21"
+
+[dev-dependencies]
+reqwest = { version = "0.11", features = ["json"] }

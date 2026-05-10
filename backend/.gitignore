@@ -1,0 +1,5 @@
+/target
+.env
+*.sql
+!init_db.sql
+Cargo.lock

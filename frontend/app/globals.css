@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  --brand-green: #00b86b;
+  --brand-gold: #f5a623;
+  --brand-dark: #060c18;
+  --brand-card: #0c1424;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+}
+
+@theme inline {
+  --color-brand-green: var(--brand-green);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-card: var(--brand-card);
+  --color-foreground: var(--text-primary);
+  --color-background: var(--brand-dark);
+}
+
+body {
+  background-color: var(--brand-dark);
+  color: var(--text-primary);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+}
+
+.card {
+  background: var(--brand-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  border-color: rgba(0, 184, 107, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transform: translateY(-4px);
+}
+
+.btn-primary {
+  background: var(--brand-green);
+  color: white;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px 0 rgba(0, 184, 107, 0.39);
+}
+
+.btn-primary:hover {
+  background: #009b5a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 184, 107, 0.45);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: white;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: var(--brand-green);
+  background: rgba(255, 255, 255, 0.05);
+  outline: none;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.glass {
+  background: rgba(12, 20, 36, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}

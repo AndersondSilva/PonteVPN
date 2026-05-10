@@ -1,0 +1,23 @@
+{
+  "servers": [
+    {
+      "name": "São Paulo - Prime",
+      "country_code": "BR",
+      "host": "IP_AQUI",
+      "user": "root",
+      "secret": "secret_ponte_br_2026"
+    },
+    {
+      "name": "Lisboa - Tejo",
+      "country_code": "PT",
+      "host": "IP_AQUI",
+      "user": "root",
+      "secret": "secret_ponte_pt_2026"
+    }
+  ],
+  "deployment": {
+    "github_repo": "anderson-projects/pontevpn",
+    "vercel_project": "pontevpn-frontend",
+    "railway_project": "pontevpn-api"
+  }
+}
