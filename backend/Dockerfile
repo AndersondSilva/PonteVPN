@@ -1,11 +1,6 @@
-FROM rust:latest as builder
+FROM rustlang/rust:nightly as builder
 WORKDIR /app
 COPY . .
-# Pin problematic dependencies to versions compatible with Rust 1.84/1.85
-RUN cargo update -p time --precise 0.3.36 || true
-RUN cargo update -p home --precise 0.5.11 || true
-RUN cargo update -p icu_collections --precise 1.5.0 || true
-RUN cargo update -p icu_locale_core --precise 1.5.0 || true
 RUN cargo build --release
 
 FROM debian:bookworm-slim
