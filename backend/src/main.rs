@@ -40,6 +40,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .allow_origin([
             "https://pontevpn.com".parse().unwrap(),
             "https://www.pontevpn.com".parse().unwrap(),
+            "https://ponte-vpn.vercel.app".parse().unwrap(),
+            "https://pontevpn-production.up.railway.app".parse().unwrap(),
         ])
         .allow_methods([axum::http::Method::GET, axum::http::Method::POST, axum::http::Method::DELETE])
         .allow_headers([axum::http::header::AUTHORIZATION, axum::http::header::CONTENT_TYPE]);
@@ -52,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Rotas
     let app = Router::new()
-        .route("/health", get(|| async { "OK" }))
+        .route("/health", get(|| async { axum::Json(serde_json::json!({ "status": "ok", "service": "PonteVPN API" })) }))
         .nest("/auth", Router::new()
             .route("/register", axum::routing::post(handlers::auth::register))
             .route("/login", axum::routing::post(handlers::auth::login))
