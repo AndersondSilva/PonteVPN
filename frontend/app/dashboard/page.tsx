@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Download, Trash2, Plus, LogOut, CreditCard, Globe } from "lucide-react";
+import { Download, Trash2, Plus, LogOut, CreditCard, Globe, Shield } from "lucide-react";
 import { api } from "@/lib/api";
 
-interface UserInfo { id: number; email: string; plan: string; }
+interface UserInfo { id: number; email: string; plan: string; is_admin: boolean; }
 interface Server { id: number; name: string; country: string; country_code: string; flag: string; is_available: boolean; load_percent: number; }
 interface Config { id: number; server_name: string; server_country: string; country_code: string; device_name: string; vpn_ip: string; is_active: boolean; }
 
@@ -85,9 +85,11 @@ export default function Dashboard() {
             <span className={`text-xs font-bold px-3 py-1 rounded-full ${user.plan === "free" ? "bg-white/10 text-white/60" : "bg-brand-green/20 text-brand-green"}`}>
               {PLAN_LABELS[user.plan]}
             </span>
-            <button onClick={goToBilling} className="text-white/50 hover:text-white p-2 transition-colors" title="Faturação">
-              <CreditCard size={18} />
-            </button>
+            {user.is_admin && (
+              <Link href="/admin" className="text-brand-green hover:text-brand-green/80 p-2 transition-colors" title="Painel Admin">
+                <Shield size={18} />
+              </Link>
+            )}
             <button onClick={logout} className="text-white/50 hover:text-white p-2 transition-colors" title="Sair">
               <LogOut size={18} />
             </button>

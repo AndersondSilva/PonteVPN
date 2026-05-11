@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS users (
     stripe_customer_id VARCHAR(255),
     trial_ends_at TIMESTAMPTZ,
     is_whitelisted BOOLEAN DEFAULT FALSE,
+    is_admin BOOLEAN DEFAULT FALSE,
+    is_free_user BOOLEAN DEFAULT FALSE,
     preferred_currency VARCHAR(5) DEFAULT 'BRL',
     created_at TIMESTAMPTZ DEFAULT NOW()
 );

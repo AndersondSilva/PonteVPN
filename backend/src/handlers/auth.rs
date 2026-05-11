@@ -24,6 +24,11 @@ pub struct LoginRequest {
     pub password: String,
 }
 
+#[derive(Deserialize)]
+pub struct VerifyRequest {
+    pub token: String,
+}
+
 #[derive(Serialize)]
 pub struct TokenResponse {
     pub access_token: String,
@@ -105,4 +110,48 @@ pub async fn login(
         }
         _ => (StatusCode::UNAUTHORIZED, Json(serde_json::json!({"detail": "Credenciais inválidas"}))).into_response(),
     }
+}
+
+pub async fn verify_email(
+    State(pool): State<PgPool>,
+    Json(payload): Json<VerifyRequest>,
+) -> impl IntoResponse {
+    let result = sqlx::query!(
+        "UPDATE users SET is_verified = true, verify_token = NULL WHERE verify_token = $1 RETURNING id",
+        payload.token
+    )
+    .fetch_optional(&pool)
+    .await
+    .unwrap();
+
+    match result {
+        Some(_) => (StatusCode::OK, Json(serde_json::json!({"message": "Email verificado com sucesso"}))).into_response(),
+        None => (StatusCode::BAD_REQUEST, Json(serde_json::json!({"detail": "Token inválido ou expirado"}))).into_response(),
+    }
+}
+
+pub async fn me(
+    State(pool): State<PgPool>,
+    crate::middleware::auth::ClaimsExtractor(claims): crate::middleware::auth::ClaimsExtractor,
+) -> impl IntoResponse {
+    let user_id: i32 = claims.sub.parse().unwrap();
+    
+    let user = sqlx::query!(
+        "SELECT u.id, u.email, u.is_admin, u.is_free_user, s.plan 
+         FROM users u 
+         LEFT JOIN subscriptions s ON u.id = s.user_id 
+         WHERE u.id = $1", 
+        user_id
+    )
+    .fetch_one(&pool)
+    .await
+    .unwrap();
+
+    Json(serde_json::json!({
+        "id": user.id,
+        "email": user.email,
+        "is_admin": user.is_admin,
+        "is_free_user": user.is_free_user,
+        "plan": user.plan.unwrap_or(crate::models::PlanType::Free),
+    }))
 }

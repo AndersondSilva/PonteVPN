@@ -88,8 +88,10 @@ pub async fn generate_config(
     let user_plan = sub.as_ref().map(|s| &s.plan).unwrap_or(&PlanType::Free);
     let sub_status = sub.as_ref().map(|s| &s.status).unwrap_or(&SubStatus::Active);
 
-    // Permite acesso se: Whitelisted OU Trial ativo OU Subscrição ativa
-    let has_access = user.is_whitelisted || 
+    // Permite acesso se: Admin OU Whitelisted OU Gratuidade OU Trial ativo OU Subscrição ativa
+    let has_access = user.is_admin || 
+                     user.is_whitelisted || 
+                     user.is_free_user ||
                      (user.trial_ends_at.is_some() && user.trial_ends_at.unwrap() > Utc::now()) || 
                      (*sub_status == SubStatus::Active || *sub_status == SubStatus::Trialing);
 

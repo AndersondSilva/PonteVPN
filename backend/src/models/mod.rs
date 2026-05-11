@@ -30,6 +30,8 @@ pub struct User {
     pub stripe_customer_id: Option<String>,
     pub trial_ends_at: Option<DateTime<Utc>>,
     pub is_whitelisted: bool,
+    pub is_admin: bool,
+    pub is_free_user: bool,
     pub preferred_currency: String, // "BRL" ou "EUR"
     pub created_at: DateTime<Utc>,
 }
