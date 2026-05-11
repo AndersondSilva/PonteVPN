@@ -87,7 +87,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_state(pool);
 
     // Iniciar servidor
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
+    let port = std::env::var("PORT")
+        .unwrap_or_else(|_| "8000".to_string())
+        .parse()
+        .expect("PORT deve ser um número");
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     tracing::info!("Servidor rodando em {}", addr);
     
     let listener = tokio::net::TcpListener::bind(addr).await?;
