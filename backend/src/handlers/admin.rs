@@ -21,6 +21,13 @@ pub struct ToggleFreeRequest {
     pub is_free: bool,
 }
 
+#[derive(Deserialize)]
+pub struct RegisterServerRequest {
+    pub ip: String,
+    pub pub_key: String,
+    pub agent_url: String,
+}
+
 pub async fn set_user_access(
     State(pool): State<PgPool>,
     ClaimsExtractor(claims): ClaimsExtractor,
@@ -47,6 +54,30 @@ pub async fn set_user_access(
     .unwrap();
 
     (StatusCode::OK, "Acesso atualizado com sucesso").into_response()
+}
+
+pub async fn register_server(
+    State(pool): State<PgPool>,
+    Header(admin_secret): Header<String>, // Simplificado para este endpoint automático
+    Json(payload): Json<RegisterServerRequest>,
+) -> impl IntoResponse {
+    let secret = std::env::var("VPN_SERVERS_API_SECRET").unwrap_or_default();
+    if admin_secret != secret {
+        return (StatusCode::FORBIDDEN, "Forbidden").into_response();
+    }
+
+    sqlx::query!(
+        "INSERT INTO servers (name, country, country_code, city, ip, wg_public_key, agent_url) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (ip) DO UPDATE SET wg_public_key = $6, agent_url = $7, is_active = true",
+        format!("Auto Node - {}", payload.ip), "Desconhecido", "??", "Desconhecido", 
+        payload.ip, payload.pub_key, payload.agent_url
+    )
+    .execute(&pool)
+    .await
+    .unwrap();
+
+    (StatusCode::OK, "Server registered").into_response()
 }
 
 pub async fn toggle_user_free_access(

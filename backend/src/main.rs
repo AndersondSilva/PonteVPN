@@ -80,6 +80,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .route("/users", axum::routing::get(handlers::admin::list_users))
             .route("/access", axum::routing::post(handlers::admin::set_user_access))
             .route("/toggle-free", axum::routing::post(handlers::admin::toggle_user_free_access))
+            .route("/register-server", axum::routing::post(handlers::admin::register_server))
         )
         .layer(cors)
         .layer(security_headers)

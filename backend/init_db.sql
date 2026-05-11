@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS servers (
     country VARCHAR(100) NOT NULL,
     country_code VARCHAR(5) NOT NULL,
     city VARCHAR(100) NOT NULL,
-    ip VARCHAR(50) NOT NULL,
+    ip VARCHAR(50) UNIQUE NOT NULL,
     wg_port INTEGER DEFAULT 51820,
     wg_public_key VARCHAR(255) NOT NULL,
     agent_url VARCHAR(255) NOT NULL,

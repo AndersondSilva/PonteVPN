@@ -64,62 +64,54 @@ systemctl enable wg-quick@wg0
 systemctl start wg-quick@wg0
 
 # ── 7. Instalar o agente HTTP (PonteVPN Agent) ───────────────
-pip3 install fastapi uvicorn --quiet
+pip3 install fastapi uvicorn requests --quiet
 
 mkdir -p /opt/pontevpn-agent
 
 cat > /opt/pontevpn-agent/agent.py << 'AGENT_EOF'
-"""
-PonteVPN Agent — API local para gerir peers WireGuard
-Escuta na porta 8080, apenas acessível pelo backend via secret
-"""
 import subprocess
 from fastapi import FastAPI, HTTPException, Header, Depends
 from pydantic import BaseModel
 import os
+import requests
+import time
 
 app = FastAPI()
 SECRET = os.environ.get("AGENT_SECRET", "change-this")
-
+BACKEND_URL = os.environ.get("BACKEND_URL")
+BACKEND_SECRET = os.environ.get("BACKEND_SECRET")
 
 def verify_secret(x_secret: str = Header(...)):
     if x_secret != SECRET:
         raise HTTPException(status_code=403, detail="Forbidden")
 
-
 class PeerRequest(BaseModel):
     public_key: str
-    allowed_ip: str  # ex: "10.8.1.5/32"
-
+    allowed_ip: str
 
 @app.post("/peers", dependencies=[Depends(verify_secret)])
 def add_peer(req: PeerRequest):
-    result = subprocess.run(
-        ["wg", "set", "wg0", "peer", req.public_key, "allowed-ips", req.allowed_ip],
-        capture_output=True, text=True
-    )
-    if result.returncode != 0:
-        raise HTTPException(status_code=500, detail=result.stderr)
-    # Persistir configuração
+    result = subprocess.run(["wg", "set", "wg0", "peer", req.public_key, "allowed-ips", req.allowed_ip], capture_output=True, text=True)
+    if result.returncode != 0: raise HTTPException(status_code=500, detail=result.stderr)
     subprocess.run(["wg-quick", "save", "wg0"], capture_output=True)
-    return {"status": "added", "peer": req.public_key[:16] + "..."}
-
+    return {"status": "added"}
 
 @app.delete("/peers/{public_key}", dependencies=[Depends(verify_secret)])
 def remove_peer(public_key: str):
-    result = subprocess.run(
-        ["wg", "set", "wg0", "peer", public_key, "remove"],
-        capture_output=True, text=True
-    )
+    subprocess.run(["wg-set", "wg0", "peer", public_key, "remove"], capture_output=True)
     subprocess.run(["wg-quick", "save", "wg0"], capture_output=True)
     return {"status": "removed"}
 
-
-@app.get("/health")
-def health():
-    result = subprocess.run(["wg", "show", "wg0"], capture_output=True, text=True)
-    peers = result.stdout.count("peer:")
-    return {"status": "ok", "active_peers": peers}
+@app.on_event("startup")
+def register_self():
+    if not BACKEND_URL or not BACKEND_SECRET: return
+    try:
+        pub_key = subprocess.check_output(["cat", "/etc/wireguard/publickey"]).decode().strip()
+        ip = requests.get("https://ifconfig.me").text.strip()
+        requests.post(f"{BACKEND_URL}/admin/register-server", 
+                     headers={"X-Admin-Secret": BACKEND_SECRET},
+                     json={"ip": ip, "pub_key": pub_key, "agent_url": f"http://{ip}:8080"})
+    except: pass
 AGENT_EOF
 
 # Serviço systemd para o agente
@@ -130,6 +122,8 @@ After=network.target
 
 [Service]
 Environment="AGENT_SECRET=${AGENT_SECRET}"
+Environment="BACKEND_URL=https://sua-api-railway.app"
+Environment="BACKEND_SECRET=seu-secret-admin"
 ExecStart=uvicorn agent:app --host 0.0.0.0 --port 8080
 WorkingDirectory=/opt/pontevpn-agent
 Restart=always
